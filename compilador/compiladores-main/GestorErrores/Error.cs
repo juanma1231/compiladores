@@ -1,11 +1,10 @@
-﻿using Compilador_22023.AnalisisLexico;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Compilador_22023.GestorErrores
+namespace Compiladores_Clase.GestorErrores
 {
     public class Error
     {
@@ -17,30 +16,40 @@ namespace Compilador_22023.GestorErrores
         private string causa;
         private string solucion;
         private TipoError tipo;
-        private CategoriaError categoria;
+        private CategoriaErrror categoria;
 
-        public Error(int numeroLinea, int posicionInicial, int posicionFinal, string lexema, string falla, string causa, string solucion, TipoError tipo, CategoriaError categoria)
+        public Error(int numeroLinea, int posicionInicial, int posicionFinal, string lexema, string falla, string causa, string solucion, TipoError tipo, CategoriaErrror categoria)
         {
+
             NumeroLinea = numeroLinea;
             PosicionInicial = posicionInicial;
             PosicionFinal = posicionFinal;
             Lexema = lexema;
             Falla = falla;
-            Causa = causa;
+            Causa = Causa;
             Solucion = solucion;
             Tipo = tipo;
             Categoria = categoria;
-            NumeroLinea = numeroLinea;
-            PosicionInicial = posicionInicial;
-            PosicionFinal = posicionFinal;
-            Lexema = lexema;
-            Falla = falla;
-            Causa = causa;
-            Solucion = solucion;
-            Tipo = tipo;
-            Categoria = categoria;
+
+
         }
 
+        public static Error CREAR_ERROR_LEXICO_RECUPERABLE(int numeroLinea, int posicionInicial, string lexema, string falla, string causa, string solucion)
+        {
+            return new Error(numeroLinea, posicionInicial, posicionInicial + lexema.Length, lexema, falla, causa, solucion, TipoError.LEXICO, CategoriaErrror.RECUPERABLE);
+
+        }
+
+        public static Error CREAR_ERROR_LEXICO_STOPPER(int numeroLinea, int posicionInicial, string lexema, string falla, string Causa, string solucion)
+        {
+            return new Error(numeroLinea, posicionInicial, posicionInicial + lexema.Length, lexema, falla, Causa, solucion, TipoError.LEXICO, CategoriaErrror.STOPPER);
+
+        }
+        public static Error CREAR_ERROR_SINTACTICO_STOPPER(int numeroLinea, int posicionInicial, string lexema, string falla, string Causa, string solucion)
+        {
+            return new Error(numeroLinea, posicionInicial, posicionInicial + lexema.Length, lexema, falla, Causa, solucion, TipoError.LEXICO, CategoriaErrror.STOPPER);
+
+        }
         public int NumeroLinea { get => numeroLinea; set => numeroLinea = value; }
         public int PosicionInicial { get => posicionInicial; set => posicionInicial = value; }
         public int PosicionFinal { get => posicionFinal; set => posicionFinal = value; }
@@ -49,24 +58,23 @@ namespace Compilador_22023.GestorErrores
         public string Causa { get => causa; set => causa = value; }
         public string Solucion { get => solucion; set => solucion = value; }
         public TipoError Tipo { get => tipo; set => tipo = value; }
-        public CategoriaError Categoria { get => categoria; set => categoria = value; }
+        public CategoriaErrror Categoria { get => categoria; set => categoria = value; }
 
-        public static Error CrearErrorLexicoRecuperable(int numeroLinea, int posicionInicial, string lexema, string falla, string causa, string solucion)
+        public static Error CrearErrorSintacticoStopper(int numeroLinea, int posicionInicial, string lexema, string falla, string causa, string solucion)
         {
 
-            return new Error(numeroLinea, posicionInicial, posicionInicial + lexema.Length, lexema, falla, causa, solucion, TipoError.LEXICO, CategoriaError.RECUPERABLE);
 
-        }
-        public static Error CrearErrorLexicoStopper(int numeroLinea, int posicionInicial, string lexema, string falla, string causa, string solucion)
-        {
 
-            return new Error(numeroLinea, posicionInicial, posicionInicial + lexema.Length, lexema, falla, causa, solucion, TipoError.LEXICO, CategoriaError.STOPPER);
+            return new Error(numeroLinea, posicionInicial, posicionInicial + lexema.Length, lexema, falla, causa, solucion, TipoError.SINTACTICO, CategoriaErrror.STOPPER);
+
+
 
         }
         public override string ToString()
         {
+
             StringBuilder sb = new StringBuilder();
-            sb.Append("-------------------------------INICIO-------------------------------\r\n");
+            sb.Append("-------------------------------INICIO-------------------------------");
             sb.Append("Tipo: ").Append(Tipo).Append("\r\n");
             sb.Append("Categoria: ").Append(Categoria).Append("\r\n");
             sb.Append("Lexema: ").Append(Lexema).Append("\r\n");
@@ -74,11 +82,12 @@ namespace Compilador_22023.GestorErrores
             sb.Append("Posicion Inicia: ").Append(PosicionInicial).Append("\r\n");
             sb.Append("Posicion Final: ").Append(PosicionFinal).Append("\r\n");
             sb.Append("Falla: ").Append(Falla).Append("\r\n");
-            sb.Append("Causa: ").Append(Causa).Append("\r\n")
-            sb.Append("Solución Final: ").Append(Solucion).Append("\r\n");
-
-            sb.Append("-------------------------------FIN-------------------------------\r\n");
+            sb.Append("Causa: ").Append(Causa).Append("\r\n");
+            sb.Append("solución: ").Append(Solucion).Append("\r\n");
+            sb.Append("-------------------------------FIN-------------------------------");
             return sb.ToString();
         }
-    }
+
+    }  
+
 }

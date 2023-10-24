@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Compilador_22023.GestorErrores
+namespace Compiladores_Clase.GestorErrores
 {
     public enum TipoError
     {
-        LEXICO, SINTACTICO, SEMANTICO, GENERADOR_CODIGO_INTERMEDIO, OPTIMIZACION, GENERALDOR_CODIGO_FINAL
+        LEXICO,SINTACTICO,SEMANTICO, GENERADOR_INTERMEDIO, OPTIMIZACION, GENERADOR_CODIGO_FINAL,GENERADOR_CODIGO_INTERMEDIO
     }
 }

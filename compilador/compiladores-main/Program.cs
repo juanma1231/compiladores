@@ -1,42 +1,74 @@
-﻿using Compilador_22023.AnalisisLexico;
-using Compilador_22023.cache;
-using Compilador_22023.TablaComponentes;
+﻿using Compiladores_Clase.AnalisisLexico;
+using Compiladores_Clase.AnalisisSintactico;
+using Compiladores_Clase.GestorErrores;
+using Compiladores_Clase.TablaCompenetes;
+using Compiladores_Clase.Util;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace Compilador_22023
+namespace Compiladores_Clase
 {
-    class Program
+    internal class Program
     {
         static void Main(string[] args)
         {
-            DataCache.AgregarLinea("");
-            DataCache.AgregarLinea("Segunda Línea");
-            DataCache.AgregarLinea("5 + 3 + 2 + 1");
+            
+                DataCache.AgregarLinea("");
+                DataCache.AgregarLinea("");
+                DataCache.AgregarLinea("5 +5 +3-4/20*100");
 
-            AnalizadorLexico analex = new AnalizadorLexico();
-            ComponenteLexico componente = analex.DevolverSiguienteComponente();
+                AnalizadorSintactico anaSin = new AnalizadorSintactico();
 
-            do
-            {
-                componente = analex.DevolverSiguienteComponente();
 
-            } while (!CategoriaGramatical.FIN_DE_ARCHIVO.Equals(componente.Categoria));
 
-            Imprimir(TipoComponente.SIMBOLO);
-            Imprimir(TipoComponente.LITERAL);
-            Imprimir(TipoComponente.DUMMY);
-            Imprimir(TipoComponente.PALABRA_RESERVADA);
+                try
+                {
+                    string respuesta = anaSin.Analizar();
+                    Console.WriteLine(respuesta);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+                ImprimirComponentes(TipoComponente.SIMBOLO);
+                ImprimirComponentes(TipoComponente.LITERAL);
+                ImprimirComponentes(TipoComponente.DUMMY);
+                ImprimirComponentes(TipoComponente.PALABRA_RESERVADA);
+                ImprimirErrores(TipoError.LEXICO);
+                ImprimirErrores(TipoError.SEMANTICO);
+                ImprimirErrores(TipoError.SINTACTICO);
+                ImprimirErrores(TipoError.GENERADOR_CODIGO_INTERMEDIO);
+                ImprimirErrores(TipoError.OPTIMIZACION);
+                ImprimirErrores(TipoError.GENERADOR_CODIGO_FINAL);
 
-            Thread.Sleep(20000);
-        }
-        private static void Imprimir(TipoComponente tipo)
-        {
-            Console.WriteLine("+++++++++++++++ Inicio Componentes" + tipo.ToString() + " +++++++++++++++");
-            List<ComponenteLexico> componentes = TablaMaestra.ObtenerTablaMaestra().ObtenerTodosSimbolos(tipo);
-            foreach (ComponenteLexico componente in componentes)
-            {
-                Console.WriteLine(componente.ToString());
+
+                Thread.Sleep(20000);
             }
-            Console.WriteLine("+++++++++++++++ Fin Componentes    " + tipo.ToString() + "+++++++++++++++");
+            private static void ImprimirComponentes(TipoComponente tipo)
+            {
+                Console.WriteLine("+++++++++++++++ Inicio Componentes" + tipo.ToString() + " +++++++++++++++");
+                List<ComponenteLexico> componentes = TablaMaestra.ObtenerTablaMaestra().ObtenerTodosSimbolos(tipo);
+                foreach (ComponenteLexico componente in componentes)
+                {
+                    Console.WriteLine(componente.ToString());
+                }
+                Console.WriteLine("+++++++++++++++ Fin Componentes    " + tipo.ToString() + "+++++++++++++++\r\n");
+            }
+            private static void ImprimirErrores(TipoError tipo)
+            {
+                Console.WriteLine("+++++++++++++++ Inicio Errores" + tipo.ToString() + " +++++++++++++++");
+                List<Error> errores = ManejadorErrores.ObtenerManejadorDeErrores().ObtenerErrores(tipo);
+                foreach (Error error in errores)
+                {
+                    Console.WriteLine(error.ToString());
+                }
+                Console.WriteLine("+++++++++++++++ Fin Errores    " + tipo.ToString() + "+++++++++++++++\r\n");
+            }
         }
-    }
+
+    
 }

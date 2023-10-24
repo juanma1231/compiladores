@@ -1,25 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.SymbolStore;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Compilador_22023.GestorErrores
+namespace Compiladores_Clase.GestorErrores
 {
     public class ManejadorErrores
     {
         private Dictionary<TipoError, List<Error>> errores = new Dictionary<TipoError, List<Error>>();
         private static readonly ManejadorErrores INSTANCIA = new ManejadorErrores();
 
+
+
         private ManejadorErrores()
         {
             Limpiar();
         }
 
+
+
         public static ManejadorErrores ObtenerManejadorDeErrores()
         {
             return INSTANCIA;
         }
+
+
 
         public void Limpiar()
         {
@@ -28,16 +37,20 @@ namespace Compilador_22023.GestorErrores
             errores.Add(TipoError.SEMANTICO, new List<Error>());
             errores.Add(TipoError.GENERADOR_CODIGO_INTERMEDIO, new List<Error>());
             errores.Add(TipoError.OPTIMIZACION, new List<Error>());
-            errores.Add(TipoError.GENERALDOR_CODIGO_FINAL, new List<Error>());
+            errores.Add(TipoError.GENERADOR_CODIGO_FINAL, new List<Error>());
+
+
 
         }
+
+
 
         public void ReportarError(Error error)
         {
             if (error != null)
             {
-                errores[error.Tipo].Add(error)
-                if (CategoriaError.STOPPER.Equals(error.Categoria))
+                errores[error.Tipo].Add(error);
+                if (CategoriaErrror.STOPPER.Equals(error.Categoria))
                 {
                     StringBuilder sb = new StringBuilder();
                     sb.Append("++++++++++++++ ERROR TIPO STOPPER ++++++++++++++\r\n");
@@ -50,7 +63,7 @@ namespace Compilador_22023.GestorErrores
         }
         public bool HayErrores(TipoError tipo)
         {
-            return errores.ContainsKey(tipo) && errores[tipo].Count > 0;
+            return errores[tipo].Count > 0;
         }
         public bool HayErroresAnalisis()
         {
@@ -58,11 +71,15 @@ namespace Compilador_22023.GestorErrores
         }
         public bool HayErroresSintesis()
         {
-            return HayErrores(TipoError.GENERADOR_CODIGO_INTERMEDIO) || HayErrores(TipoError.OPTIMIZACION) || HayErrores(TipoError.GENERALDOR_CODIGO_FINAL);
+            return HayErrores(TipoError.GENERADOR_CODIGO_INTERMEDIO) || HayErrores(TipoError.OPTIMIZACION) || HayErrores(TipoError.GENERADOR_CODIGO_FINAL);
         }
         public bool HayErroresCompilación()
         {
             return HayErroresAnalisis() || HayErroresSintesis();
+        }
+        public List<Error> ObtenerErrores(TipoError tipo)
+        {
+            return errores[tipo];
         }
     }
 }
