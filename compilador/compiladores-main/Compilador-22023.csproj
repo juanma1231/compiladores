@@ -49,6 +49,7 @@
     <Compile Include="AnalisisLexico\TipoComponente.cs" />
     <Compile Include="AnalisisSintactico\AnalizadorSintactico.cs" />
     <Compile Include="AnalisisSintactico\analizadorSintacticoVersion2.cs" />
+    <Compile Include="AnalisisSintactico\AnalizadorSintactico3.cs" />
     <Compile Include="DataCache.cs" />
     <Compile Include="GestorErrores\CategoriaErrror.cs" />
     <Compile Include="GestorErrores\Error.cs" />
