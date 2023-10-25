@@ -4,6 +4,7 @@ using Compiladores_Clase.AnalisisLexico;
 using Compiladores_Clase.GestorErrores;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +20,8 @@ namespace Compilador_22023.AnalisisSintactico
         private string causa = "";
         private string solucion = "";
         private Stack<double> pila = new Stack<double>();
+        private StringBuilder trazaDepuracion= new StringBuilder();
+
 
         public string Analizar()
         {
@@ -46,50 +49,60 @@ namespace Compilador_22023.AnalisisSintactico
         {
             Componente = Analex.DevolverSiguienteComponente();
         }
-        private void Expresion()
+        private void Expresion(int jerarquia)
         {
-            Termino();
-            ExpresionPrima();
+            FormarInicio("Expresion",jerarquia);
+            Termino(jerarquia + 1);
+            ExpresionPrima(jerarquia + 1);
+            FormarFin("EXPRESION", jerarquia);
         }
-        private void ExpresionPrima()
+        private void ExpresionPrima(int jerarquia)
+           
         {
+            FormarInicio("EXPRESION", jerarquia);
             if (EsCategoriaValida(CategoriaGramatical.SUMA))
             {
                 DevolverSiguienteComponenteLexico();
-                Expresion();
+                Expresion(jerarquia+1);
                 EvaluarExpresion(CategoriaGramatical.SUMA);
             }
             else if (EsCategoriaValida(CategoriaGramatical.RESTA))
             {
                 DevolverSiguienteComponenteLexico();
-                Expresion();
+                Expresion(jerarquia +1);
                 EvaluarExpresion(CategoriaGramatical.RESTA);
             }
+            FormarFin("EXPRESION", jerarquia);
         }
-        private void Termino()
+        private void Termino(int jerarquia)
         {
-            Factor();
-            TerminoPrima();
+            FormarInicio("EXPRESION", jerarquia);
+            Factor(jerarquia + 1);
+            TerminoPrima(jerarquia + 1);
+            FormarFin("EXPRESION", jerarquia);
 
         }
-        private void TerminoPrima()
+        private void TerminoPrima(int jerarquia)
         {
+            FormarInicio("EXPRESION", jerarquia)
             if (EsCategoriaValida(CategoriaGramatical.MULTIPLICACION))
             {
                 DevolverSiguienteComponenteLexico();
-                Termino();
+                Termino(jerarquia + 1);
                 EvaluarExpresion(CategoriaGramatical.MULTIPLICACION);
             }
             else if (EsCategoriaValida(CategoriaGramatical.DIVISION))
             {
                 DevolverSiguienteComponenteLexico();
-                Termino();
+                Termino(jerarquia + 1);
                 EvaluarExpresion(CategoriaGramatical.DIVISION);
             }
+            FormarFin("EXPRESION", jerarquia);
 
         }
-        private void Factor()
+        private void Factor(int jerarquia)
         {
+            FormarInicio("EXPRESION", jerarquia);
             if (EsCategoriaValida(CategoriaGramatical.NUMERO_ENTERO))
             {
                 pila.Push()
@@ -102,7 +115,7 @@ namespace Compilador_22023.AnalisisSintactico
             else if (EsCategoriaValida(CategoriaGramatical.PARENTESIS_ABRE))
             {
                 DevolverSiguienteComponenteLexico();
-                Expresion();
+                Expresion(jerarquia+1);
                 if (EsCategoriaValida(CategoriaGramatical.PARENTESIS_CIERRA))
                 {
                     DevolverSiguienteComponenteLexico();
@@ -122,6 +135,7 @@ namespace Compilador_22023.AnalisisSintactico
                 solucion = "Asegurese que en la posición esperada se encuentre un NUMERO_ENTERO, NUMERO_DECIMAL o PARENTESIS_ABRE";
                 ReportarErrorSintacticoStopper();
             }
+            FormarFin("EXPRESION", jerarquia);
         }
         private bool EsCategoriaValida(CategoriaGramatical categoria)
         {
@@ -174,5 +188,19 @@ namespace Compilador_22023.AnalisisSintactico
             }
 
         }
+        private void FormarInicio(String nombreRegla, int jerarquia)
+        {
+            StringBuilder indentador = new StringBuilder;
+            for (int indice = 1; indice <= jerarquia; indice++)
+            {
+                indentador.Append("--------");
+            }
+            indentador.Append("INICIO REGLA").Append(nombreRegla);
+            indentador.Append(" con componente").Append(Componente.Lexema).Append("\n");
+
+            trazaDepuracion.Append(indentador.ToString());
+
+        }
     }
+   
 }
